@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vertex — Campus Operating System
+
+> Where campus life connects.
+
+Vertex is a campus event management platform built for Indian college students and organizers. It eliminates the chaos of WhatsApp groups, manual certificates, and paper attendance by bringing everything into one unified system.
+
+---
+
+## What It Does
+
+**For Students**
+- Discover and register for campus events in one place
+- Get push notifications 1 day and 1 hour before events
+- Receive certificates automatically after attending
+- Get OD letters sent directly to your professor
+- Build a VScore — a real-time campus participation grade
+
+**For Organizers**
+- Create and manage events with an approval workflow
+- Mark attendance via QR code scanner
+- Generate and email certificates to all attendees in one click
+- Send OD letters to students and their professors automatically
+- View registration and attendance analytics
+
+**For Admin**
+- Approve or reject events before they go live
+- Manage clubs and organizers
+- Send college-wide announcements
+- View platform-wide engagement data
+
+---
+
+## Feature Modules
+
+| Module | Description |
+|---|---|
+| **EventPass** | Event discovery, registration, QR ticket |
+| **PulseAlert** | Push notifications and reminders |
+| **ClubHub** | Club pages, follow system |
+| **RollCall** | QR-based attendance marking |
+| **CertifyMe** | Auto certificate generation and delivery |
+| **ODPass** | OD letter generation and professor delivery |
+| **TrustMark** | Public document verification via unique ID |
+| **VScore** | Real-time campus participation scoring |
+| **InsightBoard** | Analytics for organizers and admin |
+| **GateKeeper** | Admin controls and approvals |
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Database | Supabase (Postgres) |
+| Auth | Supabase Auth |
+| Storage | Supabase Storage |
+| Notifications | Firebase Cloud Messaging |
+| PDF Generation | pdf-lib |
+| Email | Resend |
+| QR Code | qrcode (npm) |
+| State Management | Zustand |
+| Forms | React Hook Form + Zod |
+| Deployment | Vercel |
+| PWA | next-pwa |
+
+---
+
+## Project Structure
+```
+vertex/
+├── app/
+│   ├── (auth)/          # Login, Signup
+│   ├── (student)/       # Student dashboard, events, clubs
+│   ├── (organizer)/     # Organizer dashboard, event management
+│   ├── (admin)/         # Admin panel
+│   └── api/             # API routes
+├── components/
+│   ├── ui/              # Reusable UI components
+│   ├── events/          # Event-specific components
+│   ├── clubs/           # Club-specific components
+│   └── shared/          # Navbar, sidebar, footer
+├── lib/                 # Supabase client, utilities
+├── hooks/               # Custom React hooks
+└── types/               # TypeScript interfaces
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+
+- Supabase account
+- Firebase account
+- Resend account
 
+### Installation
 ```bash
+# Clone the repo
+git clone https://github.com/yourusername/vertex.git
+cd vertex
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+RESEND_API_KEY=
+NEXT_PUBLIC_APP_URL=
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Roadmap
 
-## Learn More
+- [x] Project setup and folder structure
+- [x] TypeScript types
+- [ ] Supabase setup and database schema
+- [ ] Authentication (email + Google)
+- [ ] Event browsing and registration
+- [ ] Admin approval flow
+- [ ] Push notifications
+- [ ] Club pages
+- [ ] Certificate generation
+- [ ] OD letter system
+- [ ] VScore system
+- [ ] PWA setup
+- [ ] Launch at SRM Haryana
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Built By
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Harsh Wardhan — B.Tech CSE, SRM University Haryana (2025–2029)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Built for SRM Haryana. Designed to scale.*
