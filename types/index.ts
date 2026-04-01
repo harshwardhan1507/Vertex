@@ -14,6 +14,7 @@ export interface User {
   branch?: string
   semester?: number
   professor_email?: string
+  vscore?: number
   created_at: string
 }
 

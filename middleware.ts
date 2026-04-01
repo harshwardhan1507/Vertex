@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-
+  
   // Protected routes — must be logged in
   const protectedPaths = ['/dashboard', '/events', '/clubs', '/organizer', '/admin']
   const isProtected = protectedPaths.some(path => pathname.startsWith(path))
@@ -38,6 +38,20 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('next', pathname)
     return NextResponse.redirect(loginUrl)
+  }
+
+  // Role Base Access Control (RBAC) via GateKeeper
+  if (user) {
+    // We expect the role to be stored in user_metadata during signup
+    const role = user.user_metadata?.role || 'student'
+
+    if (pathname.startsWith('/organizer') && role !== 'organizer' && role !== 'admin') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+
+    if (pathname.startsWith('/admin') && role !== 'admin') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   // Auth pages — if already logged in redirect to dashboard

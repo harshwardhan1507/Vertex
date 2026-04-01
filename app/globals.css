@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-success: #22d3a5;
+  --color-warning: #f5a623;
+  --color-border-subtle: var(--border-subtle);
+  --color-border-hover: var(--border-hover);
+  
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-text-muted: var(--sidebar-text-muted);
+  --color-sidebar-border: var(--sidebar-border);
+  
+  --font-headline: var(--font-syne), "Syne", "Plus Jakarta Sans", sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", "Inter", sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* LIGHT MODE VARIABLES */
+  --bg: #F8F9FB;
+  --surface: #FFFFFF;
+  --surface-hover: #F7F9FC;
+  --primary: #2D6CFF;
+  --accent: #A07CFF;
+  --accent2: #4D8DFF;
+  --text-main: #1A1C1E;
+  --text-muted: #74777F;
+  --text-dim: #74777F; 
+  --border-subtle: #E1E2EC;
+  --border-hover: #D1D2DC;
+  
+  /* Sidebar stays dark in light mode */
+  --sidebar-bg: #1A1C2E;
+  --sidebar-text: #FFFFFF;
+  --sidebar-text-muted: #94A3B8;
+  --sidebar-border: #2A2C40;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  /* DARK MODE VARIABLES */
+  --bg: #08080f;
+  --surface: #0f0f1a;
+  --surface-hover: #15152a;
+  --primary: #7c5cfc;
+  --accent: #f059da;
+  --accent2: #05d9c8;
+  --text-main: #f0eeff;
+  --text-muted: #7b7a9d;
+  --text-dim: #4a4968;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  
+  /* Sidebar blends with dark mode background */
+  --sidebar-bg: transparent;
+  --sidebar-text: #FFFFFF;
+  --sidebar-text-muted: #7b7a9d;
+  --sidebar-border: rgba(255,255,255,0.05);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* AMBIENT BG for Desktop (Dark Mode Only) */
+.dark body::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(124,92,252,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+.dark body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(ellipse, rgba(240,89,218,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* GRADIENTS */
+.card-grad {
+  background: var(--surface);
+}
+.dark .card-grad {
+  background: linear-gradient(135deg, #15152a 0%, #0f0f1a 100%);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, var(--primary), #9b5de5);
+}
+
+.vscore-banner-bg {
+  background: linear-gradient(135deg, #E8EEFF 0%, #FFFFFF 100%); /* Lighter for clean contrast */
+}
+.dark .vscore-banner-bg {
+  background: linear-gradient(135deg, rgba(30, 15, 60, 0.9) 0%, rgba(15, 10, 30, 0.95) 100%), 
+              url('https://www.transparenttextures.com/patterns/stardust.png');
+}
+
+.nebula-card {
+  background: linear-gradient(110deg, #E0E7FF 0%, #F3E8FF 50%, #FFFFFF 100%);
+  position: relative;
+  overflow: hidden;
+}
+.dark .nebula-card {
+  background: linear-gradient(135deg, rgba(30, 32, 50, 0.8) 0%, rgba(15, 10, 30, 0.9) 100%), 
+              url('https://www.transparenttextures.com/patterns/stardust.png');
+}
+.dark .nebula-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  z-index: 0;
 }

@@ -19,7 +19,7 @@ async function handleSignup(e: React.FormEvent) {
   setLoading(true)
   setError('')
 
-  const { data, error } = await signUpWithEmail(email, password, name)
+  const { data, error } = await signUpWithEmail(email, password, name, role)
 
   if (error) {
     setError(error.message)
