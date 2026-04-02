@@ -74,15 +74,16 @@ vertex/
 ├── app/
 │   ├── (auth)/          # Login, Signup
 │   ├── (student)/       # Student dashboard, events, clubs
-│   ├── (organizer)/     # Organizer dashboard, event management
 │   ├── (admin)/         # Admin panel
-│   └── api/             # API routes
+│   ├── api/             # API routes
+│   └── organizer/       # Organizer dashboard, event management
 ├── components/
 │   ├── ui/              # Reusable UI components
 │   ├── events/          # Event-specific components
 │   ├── clubs/           # Club-specific components
 │   └── shared/          # Navbar, sidebar, footer
 ├── lib/                 # Supabase client, utilities
+├── store/               # Zustand stores
 ├── hooks/               # Custom React hooks
 └── types/               # TypeScript interfaces
 ```
@@ -132,9 +133,10 @@ NEXT_PUBLIC_APP_URL=
 
 - [x] Project setup and folder structure
 - [x] TypeScript types
-- [ ] Supabase setup and database schema
-- [ ] Authentication (email + Google)
-- [ ] Event browsing and registration
+- [x] Supabase setup and database schema
+- [x] Authentication (email + Google)
+- [x] Event browsing and registration
+- [x] Organizer Dashboard interface
 - [ ] Admin approval flow
 - [ ] Push notifications
 - [ ] Club pages
