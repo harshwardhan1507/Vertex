@@ -14,35 +14,42 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-async function handleSignup(e: React.FormEvent) {
-  e.preventDefault()
-  setLoading(true)
-  setError('')
-
-  const { data, error } = await signUpWithEmail(email, password, name, role)
-
-  if (error) {
-    setError(error.message)
-    setLoading(false)
-    return
-  }
-
-  if (data.session) {
-    const userRole = data.user?.user_metadata?.role || role
-    if (userRole === 'organizer' || userRole === 'admin') {
+  function redirectByRole(role: string) {
+    if (role === 'admin') {
+      router.push('/admin/dashboard')
+    } else if (role === 'organizer') {
       router.push('/organizer/dashboard')
     } else {
       router.push('/dashboard')
     }
     router.refresh()
-  } else if (data.user) {
-    setError('Registration successful! Please check your email to verify your account.')
-    setLoading(false)
-  } else {
-    setError('Something went wrong. Try again.')
-    setLoading(false)
   }
-}
+
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const { data, error } = await signUpWithEmail(email, password, name, role)
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    if (data.session) {
+      // The signup trigger will create the user in public.users with the role
+      // from user_metadata, so we can trust it here on first signup
+      redirectByRole(role)
+    } else if (data.user) {
+      setError('Registration successful! Please check your email to verify your account.')
+      setLoading(false)
+    } else {
+      setError('Something went wrong. Try again.')
+      setLoading(false)
+    }
+  }
 
   async function handleGoogle() {
     setLoading(true)
@@ -52,6 +59,11 @@ async function handleSignup(e: React.FormEvent) {
       setLoading(false)
     }
   }
+
+  const roles = [
+    { value: 'student' as const, label: '🎓 Student', desc: 'Attend events & earn VScore' },
+    { value: 'organizer' as const, label: '🎯 Organizer', desc: 'Create & manage club events' },
+  ]
 
   return (
     <div className="w-full max-w-md">
@@ -72,9 +84,13 @@ async function handleSignup(e: React.FormEvent) {
           Join your campus on Vertex
         </p>
 
-        {/* Error */}
+        {/* Error / Success */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl p-3 mb-4">
+          <div className={`text-sm rounded-xl p-3 mb-4 ${
+            error.includes('successful') 
+              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' 
+              : 'bg-red-500/10 border border-red-500/20 text-red-400'
+          }`}>
             {error}
           </div>
         )}
@@ -102,29 +118,25 @@ async function handleSignup(e: React.FormEvent) {
         </div>
 
         {/* Role Selector */}
-        <div className="flex gap-2 mb-4">
-          <button
-            type="button"
-            onClick={() => setRole('student')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
-              role === 'student'
-                ? 'bg-violet-500/15 border-violet-500/40 text-violet-300'
-                : 'bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white/60'
-            }`}
-          >
-            🎓 Student
-          </button>
-          <button
-            type="button"
-            onClick={() => setRole('organizer')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
-              role === 'organizer'
-                ? 'bg-violet-500/15 border-violet-500/40 text-violet-300'
-                : 'bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white/60'
-            }`}
-          >
-            🎯 Organizer
-          </button>
+        <div className="mb-4">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 mb-2">I am a</p>
+          <div className="flex gap-2">
+            {roles.map(r => (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setRole(r.value)}
+                className={`flex-1 py-3 px-2 rounded-xl text-sm font-medium transition-all border flex flex-col items-center gap-0.5 ${
+                  role === r.value
+                    ? 'bg-violet-500/15 border-violet-500/40 text-violet-300 shadow-sm shadow-violet-500/10'
+                    : 'bg-white/[0.03] border-white/[0.07] text-white/40 hover:text-white/60 hover:border-white/15'
+                }`}
+              >
+                <span>{r.label}</span>
+                <span className="text-[10px] opacity-60">{r.desc}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Form */}

@@ -1,7 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
-
-dotenv.config({ path: '.env.local' })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY // Bypass RLS
@@ -21,6 +18,7 @@ async function getOrCreateUser(email, name, role) {
   if (users && users.length > 0) {
     if (users[0].role !== role) {
       await supabase.from('users').update({ role }).eq('id', users[0].id)
+      await supabase.auth.admin.updateUserById(users[0].id, { user_metadata: { full_name: name, role } })
     }
     return users[0]
   }
@@ -71,6 +69,7 @@ async function seed() {
   const { data: realUsers } = await supabase.from('users').select('*').limit(1)
   if (realUsers && realUsers.length > 0) {
     await supabase.from('users').update({ role: 'admin' }).eq('id', realUsers[0].id)
+    await supabase.auth.admin.updateUserById(realUsers[0].id, { user_metadata: { role: 'admin' } })
     console.log(`Granted Admin role to ${realUsers[0].email} for local testing.`)
   }
 

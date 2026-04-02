@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signInWithEmail, signInWithGoogle } from '@/lib/auth'
+import { createClient } from '@/lib/supabase'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -12,35 +13,49 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-async function handleLogin(e: React.FormEvent) {
-  e.preventDefault()
-  setLoading(true)
-  setError('')
-
-  const { data, error } = await signInWithEmail(email, password)
-
-  if (error) {
-    setError(error.message)
-    setLoading(false)
-    return
-  }
-
-  if (data.session) {
-    const userRole = data.user?.user_metadata?.role || 'student'
-    if (userRole === 'organizer' || userRole === 'admin') {
+  function redirectByRole(role: string) {
+    if (role === 'admin') {
+      router.push('/admin/dashboard')
+    } else if (role === 'organizer') {
       router.push('/organizer/dashboard')
     } else {
       router.push('/dashboard')
     }
     router.refresh()
-  } else if (data.user) {
-    setError('Please verify your email before logging in.')
-    setLoading(false)
-  } else {
-    setError('Something went wrong. Try again.')
-    setLoading(false)
   }
-}
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const { data, error } = await signInWithEmail(email, password)
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    if (data.session) {
+      // Always fetch the real role from the database — JWT metadata can be stale
+      const supabase = createClient()
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', data.user!.id)
+        .single()
+
+      const realRole = dbUser?.role || data.user?.user_metadata?.role || 'student'
+      redirectByRole(realRole)
+    } else if (data.user) {
+      setError('Please verify your email before logging in.')
+      setLoading(false)
+    } else {
+      setError('Something went wrong. Try again.')
+      setLoading(false)
+    }
+  }
 
   async function handleGoogle() {
     setLoading(true)
@@ -97,6 +112,37 @@ async function handleLogin(e: React.FormEvent) {
           <div className="flex-1 h-px bg-white/[0.06]"></div>
           <span className="text-xs text-white/25">or</span>
           <div className="flex-1 h-px bg-white/[0.06]"></div>
+        </div>
+
+        {/* Quick Demo Login Buttons */}
+        <div className="mb-5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 mb-2.5 text-center">Quick Demo Login</p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => { setEmail('student1@vertex.com'); setPassword('password123') }}
+              className="flex-1 py-2 rounded-xl text-xs font-medium transition-all border bg-emerald-500/5 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 disabled:opacity-50"
+            >
+              🎓 Student
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => { setEmail('organizer@vertex.com'); setPassword('password123') }}
+              className="flex-1 py-2 rounded-xl text-xs font-medium transition-all border bg-blue-500/5 border-blue-500/20 text-blue-400 hover:bg-blue-500/10 disabled:opacity-50"
+            >
+              🎯 Organizer
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => { setEmail('admin@vertex.com'); setPassword('password123') }}
+              className="flex-1 py-2 rounded-xl text-xs font-medium transition-all border bg-rose-500/5 border-rose-500/20 text-rose-400 hover:bg-rose-500/10 disabled:opacity-50"
+            >
+              🛡️ Admin
+            </button>
+          </div>
         </div>
 
         {/* Form */}
