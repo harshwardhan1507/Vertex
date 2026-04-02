@@ -26,8 +26,16 @@ async function handleLogin(e: React.FormEvent) {
   }
 
   if (data.session) {
-    router.push('/dashboard')
+    const userRole = data.user?.user_metadata?.role || 'student'
+    if (userRole === 'organizer' || userRole === 'admin') {
+      router.push('/organizer/dashboard')
+    } else {
+      router.push('/dashboard')
+    }
     router.refresh()
+  } else if (data.user) {
+    setError('Please verify your email before logging in.')
+    setLoading(false)
   } else {
     setError('Something went wrong. Try again.')
     setLoading(false)

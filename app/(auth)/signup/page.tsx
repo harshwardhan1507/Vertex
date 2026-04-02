@@ -28,8 +28,16 @@ async function handleSignup(e: React.FormEvent) {
   }
 
   if (data.session) {
-    router.push('/dashboard')
+    const userRole = data.user?.user_metadata?.role || role
+    if (userRole === 'organizer' || userRole === 'admin') {
+      router.push('/organizer/dashboard')
+    } else {
+      router.push('/dashboard')
+    }
     router.refresh()
+  } else if (data.user) {
+    setError('Registration successful! Please check your email to verify your account.')
+    setLoading(false)
   } else {
     setError('Something went wrong. Try again.')
     setLoading(false)

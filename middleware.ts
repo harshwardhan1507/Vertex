@@ -59,6 +59,10 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = authPaths.some(path => pathname === path)
 
   if (user && isAuthPage) {
+    const role = user.user_metadata?.role || 'student'
+    if (role === 'organizer' || role === 'admin') {
+      return NextResponse.redirect(new URL('/organizer/dashboard', request.url))
+    }
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 

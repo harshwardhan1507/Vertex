@@ -12,14 +12,29 @@ export default function LeaderboardPage() {
   useEffect(() => {
     async function fetchLeaderboard() {
       const supabase = createClient()
-      const { data } = await supabase
-        .from('users')
-        .select('*')
-        .eq('role', 'student') // Only show students
-        .order('vscore', { ascending: false })
+      const { data, error } = await supabase
+        .from('participation_scores')
+        .select(`
+          total_score,
+          users!inner (
+            id,
+            name,
+            avatar_url,
+            role
+          )
+        `)
+        .eq('users.role', 'student')
+        .order('total_score', { ascending: false })
         .limit(50)
 
-      if (data) setLeaders(data as User[])
+      if (data) {
+        // Map it back to a flat array that the UI expects
+        const mappedLeaders = data.map((item: any) => ({
+          ...item.users,
+          vscore: item.total_score
+        }))
+        setLeaders(mappedLeaders)
+      }
       setLoading(false)
     }
 
