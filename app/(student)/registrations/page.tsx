@@ -24,7 +24,7 @@ export default function RegistrationsPage() {
         .from('registrations')
         .select(`*, event:events(*)`)
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .order('registered_at', { ascending: false })
 
       if (data) {
         setRegistrations(data as unknown as RegistrationWithEvent[])

@@ -26,7 +26,7 @@ export default function DashboardPage() {
         supabase.from('users').select('*').eq('id', authUser.id).single(),
         supabase.from('participation_scores').select('*').eq('user_id', authUser.id).single(),
         supabase.from('events').select('*, clubs(name)').eq('status', 'approved').gte('start_time', new Date().toISOString()).order('start_time', { ascending: true }).limit(3),
-        supabase.from('registrations').select('*, events(title, start_time, venue)').eq('user_id', authUser.id).order('created_at', { ascending: false }).limit(3),
+        supabase.from('registrations').select('*, events!inner(title, start_time, venue)').eq('user_id', authUser.id).gte('events.start_time', new Date().toISOString()).order('registered_at', { ascending: false }).limit(5),
         supabase.from('certificates').select('*, events(title, start_time, clubs(name))').eq('user_id', authUser.id).order('issued_at', { ascending: false }).limit(2)
       ])
 

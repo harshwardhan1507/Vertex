@@ -138,8 +138,8 @@ export default function OrganizerEventDetails({ params }: { params: Promise<{ id
                        <CheckCircle className="w-3 h-3" /> In
                      </span>
                   ) : (
-                     <span className="inline-flex items-center gap-1 bg-[var(--color-border-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-subtle)] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
-                       Pending
+                     <span className="inline-flex items-center gap-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                       Registered
                      </span>
                   )}
                 </div>

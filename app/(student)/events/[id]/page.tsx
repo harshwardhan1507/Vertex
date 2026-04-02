@@ -172,6 +172,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                     <span className="font-bold text-emerald-400">You're Going!</span>
                     <span className="text-xs text-emerald-400/70 mt-1">Ticket Confirmed</span>
                   </div>
+                  <Link 
+                    href="/registrations" 
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] hover:bg-[var(--color-primary)]/20 font-bold text-sm rounded-xl transition-colors border border-[var(--color-primary)]/20"
+                  >
+                    <Ticket className="w-4 h-4" /> View My Tickets
+                  </Link>
                   {registration.attended ? (
                      <div className="text-center text-xs text-[var(--color-primary)] font-medium border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/10 rounded-xl p-3">
                          ✓ Marked Attended
