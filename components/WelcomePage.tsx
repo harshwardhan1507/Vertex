@@ -66,7 +66,7 @@ export default function WelcomePage() {
         >
           <div className="welcome-illustration-blob" />
           <Image
-            src="/welcome-illustration.png"
+            src="/welcome.png"
             alt="Welcome Illustration showing a person with a clipboard and signposts"
             width={280}
             height={280}
