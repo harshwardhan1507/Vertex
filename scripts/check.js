@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 const url = 'https://javtroneunhzvoqswzuw.supabase.co';
-const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphdnRyb25ldW5oenZvcXN3enV3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDc2NjAzMCwiZXhwIjoyMDkwMzQyMDMwfQ.CbsHdbeqQMxR6BkmR87JKXavveU8MkOYGHOq0wN31R0';
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(url, key);
 
 async function check() {
