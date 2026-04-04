@@ -206,7 +206,7 @@ The project follows a 10-phase plan across 94 tasks. Progress is tracked in [`tr
 ### Phase 4 — RollCall 🔵
 > Week 5 · QR attendance system
 
-- [x] QR code generator UI for organizer
+- [ ] QR code generator UI for organizer (Deferred for Vercel deployment)
 - [x] Mark attendance endpoint `POST /api/attendance`
 - [x] Live attendance counter on organizer event page
 - [ ] Attendance sheet PDF generation (pdf-lib)
@@ -303,8 +303,8 @@ The project follows a 10-phase plan across 94 tasks. Progress is tracked in [`tr
 | Metric | Count |
 |---|---|
 | Total Tasks | 94 |
-| Completed | 35 |
-| Remaining | 59 |
+| Completed | 34 |
+| Remaining | 60 |
 | Total Phases | 10 |
 | Current Phase | Phase 2, 3, 4 In Progress |
 
