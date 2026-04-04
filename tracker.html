@@ -1,0 +1,778 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: var(--font-sans);
+    }
+
+    .tracker {
+        padding: 1.5rem 0;
+    }
+
+    .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-box {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--border-radius-md);
+        background: #2D6CFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .project-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .project-sub {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        margin-top: 1px;
+    }
+
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 12px 14px;
+    }
+
+    .summary-label {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-bottom: 4px;
+    }
+
+    .summary-value {
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .summary-sub {
+        font-size: 11px;
+        color: var(--color-text-secondary);
+        margin-top: 2px;
+    }
+
+    .overall-progress {
+        margin-bottom: 1.5rem;
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 14px 16px;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .progress-label {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+    }
+
+    .progress-pct {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .progress-track {
+        height: 6px;
+        background: var(--color-border-tertiary);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #2D6CFF;
+        border-radius: 99px;
+        transition: width 0.4s ease;
+    }
+
+    .phases {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .phase-card {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+    }
+
+    .phase-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .phase-header:hover {
+        background: var(--color-background-secondary);
+    }
+
+    .phase-num {
+        width: 28px;
+        height: 28px;
+        border-radius: var(--border-radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 500;
+        flex-shrink: 0;
+    }
+
+    .phase-info {
+        flex: 1;
+    }
+
+    .phase-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+    }
+
+    .phase-meta {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        margin-top: 2px;
+    }
+
+    .phase-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .phase-progress-text {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+    }
+
+    .phase-mini-bar {
+        width: 60px;
+        height: 4px;
+        background: var(--color-border-tertiary);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .phase-mini-fill {
+        height: 100%;
+        border-radius: 99px;
+    }
+
+    .chevron {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        transition: transform 0.2s;
+    }
+
+    .chevron.open {
+        transform: rotate(180deg);
+    }
+
+    .phase-tasks {
+        border-top: 0.5px solid var(--color-border-tertiary);
+        display: none;
+    }
+
+    .phase-tasks.open {
+        display: block;
+    }
+
+    .task-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 16px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        cursor: pointer;
+    }
+
+    .task-row:last-child {
+        border-bottom: none;
+    }
+
+    .task-row:hover {
+        background: var(--color-background-secondary);
+    }
+
+    .task-check {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 0.5px solid var(--color-border-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.15s;
+    }
+
+    .task-check.done {
+        background: #2D6CFF;
+        border-color: #2D6CFF;
+    }
+
+    .task-check.done::after {
+        content: '';
+        width: 8px;
+        height: 5px;
+        border-left: 1.5px solid white;
+        border-bottom: 1.5px solid white;
+        transform: rotate(-45deg) translateY(-1px);
+    }
+
+    .task-body {
+        flex: 1;
+    }
+
+    .task-name {
+        font-size: 13px;
+        color: var(--color-text-primary);
+        line-height: 1.4;
+    }
+
+    .task-name.done {
+        color: var(--color-text-secondary);
+        text-decoration: line-through;
+    }
+
+    .task-tags {
+        display: flex;
+        gap: 5px;
+        margin-top: 4px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        font-size: 11px;
+        padding: 2px 7px;
+        border-radius: var(--border-radius-md);
+        font-weight: 500;
+    }
+
+    .tag-student {
+        background: var(--color-background-info);
+        color: var(--color-text-info);
+    }
+
+    .tag-organizer {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .tag-admin {
+        background: #F3E8FF;
+        color: #6B21A8;
+    }
+
+    .tag-backend {
+        background: var(--color-background-secondary);
+        color: var(--color-text-secondary);
+    }
+
+    .tag-auth {
+        background: #DCFCE7;
+        color: #166534;
+    }
+
+    .tag-db {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .tag-ui {
+        background: #E0F2FE;
+        color: #075985;
+    }
+
+    .tag-pwa {
+        background: #FDF4FF;
+        color: #86198F;
+    }
+
+    .filter-bar {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        border: 0.5px solid var(--color-border-secondary);
+        background: transparent;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: var(--font-sans);
+    }
+
+    .filter-btn.active {
+        background: #2D6CFF;
+        color: white;
+        border-color: #2D6CFF;
+    }
+
+    .filter-btn:hover:not(.active) {
+        background: var(--color-background-secondary);
+        color: var(--color-text-primary);
+    }
+
+    .status-badge {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 99px;
+        font-weight: 500;
+        flex-shrink: 0;
+    }
+
+    .status-done {
+        background: #DCFCE7;
+        color: #166534;
+    }
+
+    .status-active {
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+
+    .status-upcoming {
+        background: var(--color-background-secondary);
+        color: var(--color-text-secondary);
+    }
+</style>
+
+<div class="tracker">
+    <div class="top-bar">
+        <div class="logo-row">
+            <div class="logo-box">V</div>
+            <div>
+                <div class="project-title">Vertex — Implementation Tracker</div>
+                <div class="project-sub">Campus Operating System · SRM Haryana</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-cards" id="summary-cards"></div>
+
+    <div class="overall-progress">
+        <div class="progress-header">
+            <span class="progress-label">Overall completion</span>
+            <span class="progress-pct" id="overall-pct">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="overall-bar" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All tasks</button>
+        <button class="filter-btn" onclick="setFilter('student', this)">Student</button>
+        <button class="filter-btn" onclick="setFilter('organizer', this)">Organizer</button>
+        <button class="filter-btn" onclick="setFilter('admin', this)">Admin</button>
+        <button class="filter-btn" onclick="setFilter('backend', this)">Backend</button>
+        <button class="filter-btn" onclick="setFilter('done', this)">Done</button>
+        <button class="filter-btn" onclick="setFilter('todo', this)">To do</button>
+    </div>
+
+    <div class="phases" id="phases-container"></div>
+</div>
+
+<script>
+    const phases = [
+        {
+            id: 1,
+            name: 'Phase 1 — Foundation',
+            timeline: 'Weeks 1–2 · Core setup',
+            color: '#2D6CFF',
+            bgColor: '#EFF6FF',
+            status: 'active',
+            tasks: [
+                { id: 't1', name: 'Next.js 14 project setup with TypeScript + Tailwind', tags: ['backend'], done: true },
+                { id: 't2', name: 'Folder structure — auth, student, organizer, admin, api', tags: ['backend'], done: true },
+                { id: 't3', name: 'TypeScript interfaces for all data models', tags: ['backend'], done: true },
+                { id: 't4', name: 'Supabase project creation (Mumbai region)', tags: ['db'], done: true },
+                { id: 't5', name: 'Full database schema — 8 tables with RLS policies', tags: ['db'], done: true },
+                { id: 't6', name: 'Auto-profile trigger on new user signup', tags: ['db'], done: true },
+                { id: 't7', name: 'Supabase client setup — browser, server, admin clients', tags: ['backend'], done: true },
+                { id: 't8', name: 'Environment variables and .env.example', tags: ['backend'], done: true },
+                { id: 't9', name: 'Email + Google auth with Supabase Auth', tags: ['auth'], done: true },
+                { id: 't10', name: 'Login page — email + Google button', tags: ['auth', 'ui'], done: true },
+                { id: 't11', name: 'Signup page with role selector (student/organizer)', tags: ['auth', 'ui'], done: true },
+                { id: 't12', name: 'Middleware for route protection with session refresh', tags: ['auth', 'backend'], done: true },
+                { id: 't13', name: 'Auth callback route for Google OAuth', tags: ['auth', 'backend'], done: true },
+                { id: 't14', name: 'PWA setup — manifest.json + next-pwa config', tags: ['pwa'], done: true },
+                { id: 't15', name: 'Mobile-first student layout with bottom nav', tags: ['student', 'ui'], done: true },
+                { id: 't16', name: 'Student dashboard — real Supabase data', tags: ['student', 'ui'], done: true },
+                { id: 't17', name: 'README.md with full project documentation', tags: ['backend'], done: true },
+            ]
+        },
+        {
+            id: 2,
+            name: 'Phase 2 — EventPass',
+            timeline: 'Week 3 · Event discovery + registration',
+            color: '#7C3AED',
+            bgColor: '#F5F3FF',
+            status: 'active',
+            tasks: [
+                { id: 't18', name: 'Events listing page with search and category filters', tags: ['student', 'ui'], done: true },
+                { id: 't19', name: 'Event detail page with full info', tags: ['student', 'ui'], done: true },
+                { id: 't20', name: 'One-click registration flow', tags: ['student', 'backend'], done: true },
+                { id: 't21', name: 'QR ticket generation on registration (qrcode npm)', tags: ['student', 'backend'], done: true },
+                { id: 't22', name: 'My registrations page — upcoming and past', tags: ['student', 'ui'], done: true },
+                { id: 't23', name: 'Organizer — create event form', tags: ['organizer', 'ui'], done: true },
+                { id: 't24', name: 'Organizer — edit and delete event', tags: ['organizer', 'ui'], done: false },
+                { id: 't25', name: 'Organizer dashboard layout (desktop sidebar)', tags: ['organizer', 'ui'], done: true },
+                { id: 't26', name: 'Organizer — view registrations list for each event', tags: ['organizer', 'ui'], done: true },
+                { id: 't27', name: 'Admin — event approval / rejection flow', tags: ['admin', 'ui'], done: true },
+                { id: 't28', name: 'Admin dashboard layout', tags: ['admin', 'ui'], done: true },
+                { id: 't29', name: 'API route POST /api/events', tags: ['backend'], done: true },
+                { id: 't30', name: 'API route POST /api/register', tags: ['backend'], done: true },
+            ]
+        },
+        {
+            id: 3,
+            name: 'Phase 3 — ClubHub + PulseAlert',
+            timeline: 'Week 4 · Clubs and notifications',
+            color: '#0891B2',
+            bgColor: '#ECFEFF',
+            status: 'upcoming',
+            tasks: [
+                { id: 't31', name: 'Club profile pages with bio, logo, social links', tags: ['student', 'ui'], done: true },
+                { id: 't32', name: 'Browse all clubs page', tags: ['student', 'ui'], done: true },
+                { id: 't33', name: 'Follow / unfollow clubs', tags: ['student', 'backend'], done: false },
+                { id: 't34', name: 'Firebase Cloud Messaging setup', tags: ['backend', 'pwa'], done: false },
+                { id: 't35', name: 'Push notification — 1 day before event', tags: ['backend'], done: false },
+                { id: 't36', name: 'Push notification — 1 hour before event', tags: ['backend'], done: false },
+                { id: 't37', name: 'Supabase Edge Function cron job for notifications', tags: ['backend', 'db'], done: false },
+                { id: 't38', name: 'Organizer — send custom notification to registrants', tags: ['organizer', 'backend'], done: false },
+                { id: 't39', name: 'Organizer — club profile management page', tags: ['organizer', 'ui'], done: false },
+                { id: 't40', name: 'Admin — college-wide announcements', tags: ['admin', 'backend'], done: false },
+                { id: 't41', name: 'Notifications inbox for students', tags: ['student', 'ui'], done: false },
+            ]
+        },
+        {
+            id: 4,
+            name: 'Phase 4 — RollCall',
+            timeline: 'Week 5 · QR attendance system',
+            color: '#059669',
+            bgColor: '#ECFDF5',
+            status: 'upcoming',
+            tasks: [
+                { id: 't42', name: 'QR code generator UI for organizer', tags: ['organizer', 'ui'], done: true },
+                { id: 't43', name: 'Mark attendance endpoint POST /api/attendance', tags: ['backend'], done: true },
+                { id: 't44', name: 'Live attendance counter on organizer event page', tags: ['organizer', 'ui'], done: true },
+                { id: 't45', name: 'Attendance sheet PDF generation (pdf-lib)', tags: ['organizer', 'backend'], done: false },
+                { id: 't46', name: 'Download attendance sheet button for organizer', tags: ['organizer', 'ui'], done: false },
+                { id: 't47', name: 'Attendance data stored in registrations table', tags: ['db'], done: true },
+            ]
+        },
+        {
+            id: 5,
+            name: 'Phase 5 — CertifyMe + ODPass',
+            timeline: 'Week 6 · Documents and verification',
+            color: '#D97706',
+            bgColor: '#FFFBEB',
+            status: 'upcoming',
+            tasks: [
+                { id: 't48', name: 'Certificate PDF template design (pdf-lib)', tags: ['backend'], done: false },
+                { id: 't49', name: 'One-click certificate generation for all attendees', tags: ['organizer', 'backend'], done: false },
+                { id: 't50', name: 'Email certificates via Resend to each student', tags: ['backend'], done: false },
+                { id: 't51', name: 'Student certificate collection page', tags: ['student', 'ui'], done: false },
+                { id: 't52', name: 'Download certificate as PDF', tags: ['student', 'ui'], done: false },
+                { id: 't53', name: 'LinkedIn share button for certificates', tags: ['student', 'ui'], done: false },
+                { id: 't54', name: 'OD letter PDF template with student and event info', tags: ['backend'], done: false },
+                { id: 't55', name: 'Auto-send OD letter to student email', tags: ['backend'], done: false },
+                { id: 't56', name: 'Auto-send OD letter to professor email', tags: ['backend'], done: false },
+                { id: 't57', name: 'Student OD letters page — view and download', tags: ['student', 'ui'], done: false },
+                { id: 't58', name: 'Organizer one-click send OD to all present', tags: ['organizer', 'backend'], done: false },
+            ]
+        },
+        {
+            id: 6,
+            name: 'Phase 6 — TrustMark',
+            timeline: 'Week 6 · Document verification',
+            color: '#DC2626',
+            bgColor: '#FEF2F2',
+            status: 'upcoming',
+            tasks: [
+                { id: 't59', name: 'UUID generation for every certificate and OD letter', tags: ['backend'], done: false },
+                { id: 't60', name: 'QR code on every document linking to verify page', tags: ['backend'], done: false },
+                { id: 't61', name: 'Public /verify/[id] page — shows document validity', tags: ['ui'], done: false },
+                { id: 't62', name: 'Certificates table in Supabase with verification status', tags: ['db'], done: false },
+                { id: 't63', name: 'GET /api/verify/[id] endpoint', tags: ['backend'], done: false },
+            ]
+        },
+        {
+            id: 7,
+            name: 'Phase 7 — VScore',
+            timeline: 'Week 7 · Participation scoring',
+            color: '#7C3AED',
+            bgColor: '#F5F3FF',
+            status: 'upcoming',
+            tasks: [
+                { id: 't64', name: 'Score calculation logic — attended, organized, volunteer, no-show', tags: ['backend'], done: false },
+                { id: 't65', name: 'Auto-update score when attendance marked via RollCall', tags: ['backend', 'db'], done: false },
+                { id: 't66', name: 'Grade assignment — S, A, B, C, D, E based on percentage', tags: ['backend'], done: false },
+                { id: 't67', name: 'Percentile calculation across all students', tags: ['backend'], done: false },
+                { id: 't68', name: 'VScore detail page for student', tags: ['student', 'ui'], done: false },
+                { id: 't69', name: 'Campus leaderboard page — top students by score', tags: ['student', 'ui'], done: false },
+                { id: 't70', name: 'Organizer — filter students by VScore grade for inductions', tags: ['organizer', 'ui'], done: false },
+                { id: 't71', name: 'Organizer — volunteer finder filtered by grade and availability', tags: ['organizer', 'ui'], done: false },
+            ]
+        },
+        {
+            id: 8,
+            name: 'Phase 8 — InsightBoard',
+            timeline: 'Week 7 · Analytics',
+            color: '#0891B2',
+            bgColor: '#ECFEFF',
+            status: 'upcoming',
+            tasks: [
+                { id: 't72', name: 'Organizer analytics — registrations over time chart', tags: ['organizer', 'ui'], done: false },
+                { id: 't73', name: 'Organizer analytics — attendance rate per event', tags: ['organizer', 'ui'], done: false },
+                { id: 't74', name: 'Organizer analytics — club follower growth', tags: ['organizer', 'ui'], done: false },
+                { id: 't75', name: 'Admin dashboard — platform-wide event and user stats', tags: ['admin', 'ui'], done: false },
+                { id: 't76', name: 'Admin — most active clubs and students', tags: ['admin', 'ui'], done: false },
+            ]
+        },
+        {
+            id: 9,
+            name: 'Phase 9 — Polish + PWA',
+            timeline: 'Week 8 · Production ready',
+            color: '#059669',
+            bgColor: '#ECFDF5',
+            status: 'upcoming',
+            tasks: [
+                { id: 't77', name: 'PWA icons — 192px and 512px', tags: ['pwa'], done: false },
+                { id: 't78', name: 'PWA install prompt handling', tags: ['pwa'], done: false },
+                { id: 't79', name: 'Full mobile responsiveness audit', tags: ['ui'], done: false },
+                { id: 't80', name: 'Loading states and skeleton screens for all pages', tags: ['ui'], done: false },
+                { id: 't81', name: 'Empty states for events, clubs, certificates, OD letters', tags: ['ui'], done: false },
+                { id: 't82', name: 'Error handling and toast notifications', tags: ['ui'], done: false },
+                { id: 't83', name: 'Form validation on all forms with Zod', tags: ['backend'], done: false },
+                { id: 't84', name: 'Supabase Storage setup for banners, logos, signatures', tags: ['db'], done: false },
+                { id: 't85', name: 'Image upload component for event banners and club logos', tags: ['ui', 'backend'], done: false },
+                { id: 't86', name: 'Profile page — student can update name, branch, semester, professor email', tags: ['student', 'ui'], done: false },
+                { id: 't87', name: 'Dark mode toggle (optional)', tags: ['ui'], done: false },
+            ]
+        },
+        {
+            id: 10,
+            name: 'Phase 10 — Launch',
+            timeline: 'Week 8 · Go live',
+            color: '#2D6CFF',
+            bgColor: '#EFF6FF',
+            status: 'upcoming',
+            tasks: [
+                { id: 't88', name: 'Deploy to Vercel with production environment variables', tags: ['backend'], done: false },
+                { id: 't89', name: 'Custom domain setup (vertexcampus.in or similar)', tags: ['backend'], done: false },
+                { id: 't90', name: 'Vercel Analytics setup', tags: ['backend'], done: false },
+                { id: 't91', name: 'Onboard first organizer — senior tech club lead', tags: ['backend'], done: false },
+                { id: 't92', name: 'Create first real event on the platform', tags: ['backend'], done: false },
+                { id: 't93', name: 'Share with 50 students — collect feedback', tags: ['backend'], done: false },
+                { id: 't94', name: 'Fix critical bugs from real user feedback', tags: ['backend'], done: false },
+            ]
+        }
+    ];
+
+    let activeFilter = 'all';
+    let openPhases = new Set([1, 2]);
+
+    function getTagsForFilter(filter) {
+        if (filter === 'all') return null;
+        if (filter === 'done') return 'done';
+        if (filter === 'todo') return 'todo';
+        return filter;
+    }
+
+    function taskMatchesFilter(task, filter) {
+        if (filter === 'all') return true;
+        if (filter === 'done') return task.done;
+        if (filter === 'todo') return !task.done;
+        return task.tags.includes(filter);
+    }
+
+    function toggleTask(taskId) {
+        for (const phase of phases) {
+            const task = phase.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.done = !task.done;
+                break;
+            }
+        }
+        render();
+    }
+
+    function togglePhase(phaseId) {
+        if (openPhases.has(phaseId)) {
+            openPhases.delete(phaseId);
+        } else {
+            openPhases.add(phaseId);
+        }
+        render();
+    }
+
+    function setFilter(filter, btn) {
+        activeFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+    }
+
+    function getTotals() {
+        let total = 0, done = 0;
+        for (const phase of phases) {
+            for (const task of phase.tasks) {
+                total++;
+                if (task.done) done++;
+            }
+        }
+        return { total, done };
+    }
+
+    function getPhaseTotals(phase) {
+        const total = phase.tasks.length;
+        const done = phase.tasks.filter(t => t.done).length;
+        return { total, done };
+    }
+
+    function render() {
+        const { total, done } = getTotals();
+        const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+        document.getElementById('overall-pct').textContent = pct + '%';
+        document.getElementById('overall-bar').style.width = pct + '%';
+
+        const activeTasks = phases.reduce((sum, p) => {
+            return sum + p.tasks.filter(t => !t.done).length;
+        }, 0);
+
+        const activePhases = phases.filter(p => p.status === 'active').length;
+
+        document.getElementById('summary-cards').innerHTML = `
+    <div class="summary-card">
+      <div class="summary-label">Tasks done</div>
+      <div class="summary-value">${done}</div>
+      <div class="summary-sub">of ${total} total</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Remaining</div>
+      <div class="summary-value">${total - done}</div>
+      <div class="summary-sub">tasks to complete</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Phases</div>
+      <div class="summary-value">${phases.length}</div>
+      <div class="summary-sub">${activePhases} active now</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Completion</div>
+      <div class="summary-value">${pct}%</div>
+      <div class="summary-sub">overall progress</div>
+    </div>
+  `;
+
+        const container = document.getElementById('phases-container');
+        container.innerHTML = '';
+
+        for (const phase of phases) {
+            const filteredTasks = phase.tasks.filter(t => taskMatchesFilter(t, activeFilter));
+            if (filteredTasks.length === 0) continue;
+
+            const { total: pt, done: pd } = getPhaseTotals(phase);
+            const ppct = pt === 0 ? 0 : Math.round((pd / pt) * 100);
+            const isOpen = openPhases.has(phase.id);
+
+            const statusMap = {
+                done: ['Done', 'status-done'],
+                active: ['In progress', 'status-active'],
+                upcoming: ['Upcoming', 'status-upcoming'],
+            };
+            const [statusText, statusClass] = statusMap[phase.status] || ['Upcoming', 'status-upcoming'];
+
+            const card = document.createElement('div');
+            card.className = 'phase-card';
+            card.innerHTML = `
+      <div class="phase-header" onclick="togglePhase(${phase.id})">
+        <div class="phase-num" style="background: ${phase.bgColor}; color: ${phase.color};">${phase.id}</div>
+        <div class="phase-info">
+          <div class="phase-name">${phase.name}</div>
+          <div class="phase-meta">${phase.timeline}</div>
+        </div>
+        <div class="phase-right">
+          <span class="status-badge ${statusClass}">${statusText}</span>
+          <span class="phase-progress-text">${pd}/${pt}</span>
+          <div class="phase-mini-bar">
+            <div class="phase-mini-fill" style="width: ${ppct}%; background: ${phase.color};"></div>
+          </div>
+          <span class="chevron ${isOpen ? 'open' : ''}">▼</span>
+        </div>
+      </div>
+      <div class="phase-tasks ${isOpen ? 'open' : ''}">
+        ${filteredTasks.map(task => `
+          <div class="task-row" onclick="toggleTask('${task.id}')">
+            <div class="task-check ${task.done ? 'done' : ''}"></div>
+            <div class="task-body">
+              <div class="task-name ${task.done ? 'done' : ''}">${task.name}</div>
+              <div class="task-tags">
+                ${task.tags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+            container.appendChild(card);
+        }
+    }
+
+    render();
+</script>
